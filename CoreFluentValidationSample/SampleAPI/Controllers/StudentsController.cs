@@ -1,5 +1,8 @@
 ﻿using Data;
+using Data.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +15,34 @@ namespace SampleAPI.Controllers
     public class StudentsController : ControllerBase
     {
         private readonly SampleContext _context;
-        public StudentsController(SampleContext context)
+        private readonly IValidator<Student> _studentsValidation;
+        public StudentsController(SampleContext context, IValidator<Student> studentsValidation)
         {
             _context = context;
+            _studentsValidation = studentsValidation;
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Student>>> GetSudents()
+        {
+            return await _context.Students.ToListAsync();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Student>> PostStudent(Student student)
+        {
+            var result = _studentsValidation.Validate(student);
+            if (!result.IsValid)
+                //isimsiz class
+                return BadRequest(result.Errors.Select(x => new {
+                    property = x.PropertyName,
+                    error = x.ErrorMessage
+                }));
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetCustomers", new { id = student.Id }, student);
+        }
+
     }
 }
