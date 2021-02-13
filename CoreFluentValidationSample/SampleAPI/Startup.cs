@@ -1,4 +1,5 @@
 using Data;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -31,7 +32,13 @@ namespace SampleAPI
                 options.UseSqlServer(Configuration["ConnectionString"]);
             });
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(options =>
+                  options.RegisterValidatorsFromAssemblyContaining<Startup>()
+                ); ;
+
+            services.Configure<ApiBehaviorOptions>(option => {
+                option.SuppressModelStateInvalidFilter = true;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

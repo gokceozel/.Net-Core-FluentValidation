@@ -33,15 +33,15 @@ namespace SampleAPI.Controllers
         {
             var result = _studentsValidation.Validate(student);
             if (!result.IsValid)
-                //isimsiz class
-                return BadRequest(result.Errors.Select(x => new {
+                return BadRequest(
+                result.Errors.Select(x => new
+                {
                     property = x.PropertyName,
                     error = x.ErrorMessage
                 }));
             _context.Students.Add(student);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomers", new { id = student.Id }, student);
+            return Ok(student);
         }
 
     }
