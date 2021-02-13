@@ -1,4 +1,6 @@
-﻿namespace Data.Entities
+﻿using System.Collections.Generic;
+
+namespace Data.Entities
 {
     public class Address
     {
@@ -6,6 +8,6 @@
         public string Content { get; set; }
         public string Province { get; set; }
         public string PostCode { get; set; }
-        public virtual Student Student { get; set; }
+        public ICollection<Student> Students { get; set; }
     }
 }

@@ -14,16 +14,16 @@ namespace SampleAPI.Validations
         {
             RuleFor(x => x.Name).NotEmpty().WithMessage("Bu alan boş geçilemez.");
             RuleFor(x => x.Name).NotEmpty().WithMessage(NotEmptyMessage);
-            
             RuleFor(x => x.Email).EmailAddress().WithMessage("NotEmptyMessage");
             RuleFor(x => x.Gender).IsInEnum().WithMessage("{PropertyName} alanı 1 ya da 2 olabilir");
-            RuleFor(x => x.BirthDay).NotEmpty().WithMessage(NotEmptyMessage).Must(control).WithMessage("20 yaşından büyük biri kayıt olamaz.");
+            RuleFor(x => x.BirthDay).NotEmpty().WithMessage(NotEmptyMessage).Must(control).WithMessage("Okulumuz 18 yaşından büyükler için uygun değildir.");
+            RuleFor(x => x.Address).SetValidator(new AddressValidator());
         }
 
         private bool control(DateTime? arg)
         {
             var control = DateTime.Now.Year - Convert.ToDateTime(arg).Year;
-            if(control >= 20)
+            if(control >= 18)
             {
                 return true;
             }

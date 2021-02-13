@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(SampleContext))]
-    [Migration("20210213200024_Initial")]
-    partial class Initial
+    [Migration("20210213231539_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,12 +37,7 @@ namespace Data.Migrations
                     b.Property<string>("Province")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StudentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
 
                     b.ToTable("Addresses");
                 });
@@ -53,6 +48,9 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AddressId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("BirthDay")
                         .HasColumnType("datetime2");
@@ -68,14 +66,16 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
                     b.ToTable("Students");
                 });
 
-            modelBuilder.Entity("Data.Entities.Address", b =>
+            modelBuilder.Entity("Data.Entities.Student", b =>
                 {
-                    b.HasOne("Data.Entities.Student", "Student")
-                        .WithMany("Address")
-                        .HasForeignKey("StudentId");
+                    b.HasOne("Data.Entities.Address", "Address")
+                        .WithMany("Students")
+                        .HasForeignKey("AddressId");
                 });
 #pragma warning restore 612, 618
         }

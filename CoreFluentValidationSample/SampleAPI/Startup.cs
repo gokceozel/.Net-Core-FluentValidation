@@ -28,7 +28,11 @@ namespace SampleAPI
 
             services.AddControllers().AddFluentValidation(options =>
                   options.RegisterValidatorsFromAssemblyContaining<Startup>()
-                ); ;
+                )
+
+             .AddNewtonsoftJson(options =>
+             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+           );
 
             services.Configure<ApiBehaviorOptions>(option => {
                 option.SuppressModelStateInvalidFilter = true;
